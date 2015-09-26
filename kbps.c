@@ -19,7 +19,7 @@ void raw(char *fmt, ...) {
 
 int main() {
     
-    char *nick = "cbot";
+    char *nick = "Kbps";
     char *channel = NULL;
     char *host = "irc.rizon.net";
     char *port = "6667";
@@ -40,6 +40,7 @@ int main() {
     raw("NICK %s\r\n", nick);
     
     while ((sl = read(conn, sbuf, 512))) {
+		printf("/msg nickserv identify Xiaohu1986\n");
         for (i = 0; i < sl; i++) {
             o++;
             buf[o] = sbuf[i];
