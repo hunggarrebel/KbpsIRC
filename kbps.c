@@ -20,7 +20,7 @@ void raw(char *fmt, ...) {
 int main() {
     
     char *nick = "Kbps";
-    char *channel = NULL;
+    char *channel = "#silverstackers";
     char *host = "irc.rizon.net";
     char *port = "6667";
     
@@ -38,9 +38,8 @@ int main() {
     
     raw("USER %s 0 0 :%s\r\n", nick, nick);
     raw("NICK %s\r\n", nick);
-    
+
     while ((sl = read(conn, sbuf, 512))) {
-		printf("/msg nickserv identify Xiaohu1986\n");
         for (i = 0; i < sl; i++) {
             o++;
             buf[o] = sbuf[i];
@@ -77,6 +76,7 @@ int main() {
                     if (wordcount < 2) continue;
                     
                     if (!strncmp(command, "001", 3) && channel != NULL) {
+			raw("PRIVMSG NickServ :IDENTIFY Xiaohu1986\r\n");
                         raw("JOIN %s\r\n", channel);
                     } else if (!strncmp(command, "PRIVMSG", 7) || !strncmp(command, "NOTICE", 6)) {
                         if (where == NULL || message == NULL) continue;
