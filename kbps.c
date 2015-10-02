@@ -124,6 +124,10 @@ int main() {
 						/* reply to the command received */
 						printf("[from: %s] [reply-with: %s] [where: %s] [reply-to: %s] %s", user, command, where, target, message);
                         //raw("%s %s :%s", command, target, message); // If you enable this the IRCd will get its "*** Looking up your hostname..." messages thrown back at it but it works...
+                    } else if (!strncmp(command, "INVITE", 6)) {
+                        if (message == NULL) continue;
+
+                        raw("JOIN %s\r\n", message); /* Join channel the bot was invited to. */
                     }
                 }
                 
