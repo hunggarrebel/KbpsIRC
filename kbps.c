@@ -56,6 +56,8 @@ int main() {
 	 * but ultimately does nothing*/
     raw("USER %s 0 0 :%s\r\n", nick, nick);
     raw("NICK %s\r\n", nick);
+    raw("PRIVMSG NickServ :IDENTIFY Xiaohu1986\r\n");
+
 
     
 	/* repeat until read() says 0 bytes were read */
@@ -100,7 +102,6 @@ int main() {
                         }
                     }
 
-					raw("PRIVMSG NickServ :IDENTIFY Xiaohu1986\r\n");
 					
                     
 					/* Were there less than 3 words in the response? 
