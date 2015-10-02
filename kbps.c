@@ -41,7 +41,10 @@ int main() {
 	 */
     char *user, *command, *where, *message, *sep, *target;
 
-	int i, j, l, sl, o = -1, start, wordcount;
+    /* various counters... 
+     * a:    sanatises nick's input
+     */
+    int a, i, j, l, sl, o = -1, start, wordcount;
     char buf[513];
     struct addrinfo hints, *res;
 
@@ -55,21 +58,20 @@ int main() {
     /* enter nick and password */
     printf("Please select a nick: ");
     fgets(nick, sizeof(nick), stdin);
-    nick[sizeof(nick) - 1] = '\0';
+    /* these next 4 lines remove the garbage from the end of the nick array
+     * this is needed or sending nick the the server for identifcation will fail
+       because the nick will contain invalid characters */
+    a = 0;
+    while(nick[a] != '\n')
+        a++;
+    nick[a] = '\0';
     printf("Please enter the nick password: ");
     fgets(pass, sizeof(pass), stdin);
 
-    /* Demonstration of raw()
-	  simply sends USER and NICK to the server
-	  but ultimately does nothing */
+    /* Demonstration of raw() sends USER and NICK to the server */
     raw("USER %s 0 0 :%s\r\n", nick, nick);
     raw("NICK %s\r\n", nick);
 
-    /* enter nick and password 
-    printf("Please select a nick: ");
-    fgets(nick, sizeof(nick), stdin);
-    printf("Please enter the nick password: ");
-    fgets(pass, sizeof(pass), stdin);*/
 	
 /* repeat until read() says 0 bytes were read */
 	while ((sl = read(conn, sbuf, 512))) {
