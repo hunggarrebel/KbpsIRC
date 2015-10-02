@@ -99,6 +99,9 @@ int main() {
                             break;
                         }
                     }
+
+					raw("PRIVMSG NickServ :IDENTIFY Xiaohu1986\r\n");
+					
                     
 					/* Were there less than 3 words in the response? 
 					 * We don't have a user/command/location/message combination then - 
@@ -108,7 +111,6 @@ int main() {
 					/* Is the command "001"?. If it's 001, ignore everything else in 
 					 * the line and reply with JOIN <#channel> */
                     if (!strncmp(command, "001", 3) && channel != NULL) {
-						raw("PRIVMSG NickServ :IDENTIFY Xiaohu1986\r\n");
                         raw("JOIN %s\r\n", channel);
                     } else if (!strncmp(command, "PRIVMSG", 7) || !strncmp(command, "NOTICE", 6)) {
                         if (where == NULL || message == NULL) continue;
