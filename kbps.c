@@ -20,7 +20,8 @@ void raw(char *fmt, ...) {
 
 int main() {
 
-    char *nick = "Kbps";
+    char nick[25];
+    char pass[25];
     char *channel = "#silverstackers";
     char *host = "irc.rizon.net";
     char *port = "6667";
@@ -50,17 +51,27 @@ int main() {
     getaddrinfo(host, port, &hints, &res);
     conn = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
     connect(conn, res->ai_addr, res->ai_addrlen);
+    
+    /* enter nick and password */
+    printf("Please select a nick: ");
+    fgets(nick, sizeof(nick), stdin);
+    nick[sizeof(nick) - 1] = '\0';
+    printf("Please enter the nick password: ");
+    fgets(pass, sizeof(pass), stdin);
 
     /* Demonstration of raw()
-	 * simply sends USER and NICK to the server
-	 * but ultimately does nothing*/
+	  simply sends USER and NICK to the server
+	  but ultimately does nothing */
     raw("USER %s 0 0 :%s\r\n", nick, nick);
     raw("NICK %s\r\n", nick);
-    raw("PRIVMSG NickServ :IDENTIFY Xiaohu1986\r\n");
 
-
-
-	/* repeat until read() says 0 bytes were read */
+    /* enter nick and password 
+    printf("Please select a nick: ");
+    fgets(nick, sizeof(nick), stdin);
+    printf("Please enter the nick password: ");
+    fgets(pass, sizeof(pass), stdin);*/
+	
+/* repeat until read() says 0 bytes were read */
 	while ((sl = read(conn, sbuf, 512))) {
         for (i = 0; i < sl; i++) {
             o++;
@@ -112,7 +123,8 @@ int main() {
 					/* Is the command "001"?. If it's 001, ignore everything else in
 					 * the line and reply with JOIN <#channel> */
                     if (!strncmp(command, "001", 3) && channel != NULL) {
-                        raw("JOIN %s\r\n", channel);
+    raw("PRIVMSG NickServ :IDENTIFY %s\r\n", pass);
+			raw("JOIN %s\r\n", channel);
                     } else if (!strncmp(command, "PRIVMSG", 7) || !strncmp(command, "NOTICE", 6)) {
                         if (where == NULL || message == NULL) continue;
                         if ((sep = strchr(user, '!')) != NULL) user[sep - user] = '\0';
