@@ -125,8 +125,8 @@ int main() {
 					/* Is the command "001"?. If it's 001, ignore everything else in
 					 * the line and reply with JOIN <#channel> */
                     if (!strncmp(command, "001", 3) && channel != NULL) {
-    raw("PRIVMSG NickServ :IDENTIFY %s\r\n", pass);
-			raw("JOIN %s\r\n", channel);
+    					raw("PRIVMSG NickServ :IDENTIFY %s\r\n", pass);
+						raw("JOIN %s\r\n", channel);
                     } else if (!strncmp(command, "PRIVMSG", 7) || !strncmp(command, "NOTICE", 6)) {
                         if (where == NULL || message == NULL) continue;
                         if ((sep = strchr(user, '!')) != NULL) user[sep - user] = '\0';
@@ -137,10 +137,8 @@ int main() {
 
 						/* reply to the command received */
 						printf("[from: %s] [reply-with: %s] [where: %s] [reply-to: %s] %s", user, command, where, target, message);
-                        //raw("%s %s :%s", command, target, message); // If you enable this the IRCd will get its "*** Looking up your hostname..." messages thrown back at it but it works...
                     } else if (!strncmp(command, "INVITE", 6)) {
                         if (message == NULL) continue;
-
                         raw("JOIN %s\r\n", message); /* Join channel the bot was invited to. */
                     }
                 }
