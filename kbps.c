@@ -42,7 +42,12 @@ int main() {
     char *user, *command, *where, *message, *sep, *target;
 
     /* various counters... 
-     * a:    sanatises nick's input
+     * a:	sanatises nick's input
+	 * i:	loop while i < sl i.e. while there is a command to read
+	 * o:	keeps track of length of command from server (max length 512)
+	 * sl:	output of read() goes here
+	 * l:	takes the length of the command from o in order to seperate user/targer/where/msg
+	 * j:	sorts through the command while it is < l
      */
     int a, i, j, l, sl, o = -1, start, wordcount;
     char buf[513];
@@ -77,9 +82,12 @@ int main() {
 	while ((sl = read(conn, sbuf, 512))) {
         for (i = 0; i < sl; i++) {
             o++;
+			/* copy sbuf into buf */
             buf[o] = sbuf[i];
+			/* when you reach '\r\n' copy is complete */
             if ((i > 0 && sbuf[i] == '\n' && sbuf[i - 1] == '\r') || o == 512) {
-                buf[o + 1] = '\0';
+                /* add end of string character to finish the command in buf */
+				buf[o + 1] = '\0';
                 l = o;
                 o = -1;
 
@@ -96,7 +104,13 @@ int main() {
                 } else if (buf[0] == ':') {
                     wordcount = 0;
                     user = command = where = message = NULL;
-                    for (j = 1; j < l; j++) {
+                    /* loop through the command seperating
+					 * user
+					 * command
+					 * where
+					 */
+					for (j = 1; j < l; j++) {
+						/* increment wordcount when a space is reached */
                         if (buf[j] == ' ') {
                             buf[j] = '\0';
                             wordcount++;
@@ -109,13 +123,11 @@ int main() {
                             if (j == l - 1) continue;
                             start = j + 1;
                         } else if (buf[j] == ':' && wordcount == 3) {
-                            /* take the message from buf */
+                            /* finaly, take the message from buf */
 							if (j < l - 1) message = buf + j + 1;
                             break;
                         }
                     }
-
-
 
 					/* Were there less than 3 words in the response?
 					 * We don't have a user/command/location/message combination then -
